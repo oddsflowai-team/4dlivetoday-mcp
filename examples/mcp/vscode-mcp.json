@@ -1,0 +1,5 @@
+{
+  "servers": {
+    "4dlivetoday": { "type": "http", "url": "https://4dlivetoday.com/mcp" }
+  }
+}

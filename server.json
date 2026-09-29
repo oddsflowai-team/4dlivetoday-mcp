@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.oddsflowai-team/4dlivetoday",
+  "title": "4D Results (Malaysia, Singapore, Cambodia)",
+  "description": "Official 4D lottery results and draw history for Malaysia, Singapore and Cambodia. Results only.",
+  "version": "1.0.0",
+  "websiteUrl": "https://4dlivetoday.com/en/developers",
+  "repository": {
+    "url": "https://github.com/oddsflowai-team/4dlivetoday-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://4dlivetoday.com/mcp"
+    }
+  ]
+}

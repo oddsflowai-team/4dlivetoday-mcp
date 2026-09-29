@@ -184,7 +184,7 @@ CORS is open (`Access-Control-Allow-Origin: *`), so you can call it from a brows
 
 ## Response format
 
-Every successful response has the same envelope:
+Every successful response has the same envelope (`url` is the matching human-readable page on 4dlivetoday.com):
 
 ```json
 {
@@ -193,6 +193,7 @@ Every successful response has the same envelope:
   "license": "CC BY 4.0",
   "license_url": "https://creativecommons.org/licenses/by/4.0/",
   "attribution": "Results from 4dlivetoday.com (https://4dlivetoday.com), compiled from each operator's official site.",
+  "url": "https://4dlivetoday.com/en/results/2026-09-27",
   "generated_at": "2026-09-30T12:00:00.000Z"
 }
 ```

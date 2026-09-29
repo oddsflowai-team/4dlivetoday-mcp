@@ -188,7 +188,7 @@ Every successful response has the same envelope (`url` is the matching human-rea
 
 ```json
 {
-  "data": { },
+  "data": { "results": [ ] },
   "source": "4dlivetoday.com",
   "license": "CC BY 4.0",
   "license_url": "https://creativecommons.org/licenses/by/4.0/",
@@ -198,7 +198,18 @@ Every successful response has the same envelope (`url` is the matching human-rea
 }
 ```
 
-A 4D draw inside `data` (trimmed):
+What `data` holds per endpoint:
+
+| Endpoint | `data` |
+|---|---|
+| `/latest` | `{ results: [draw, …] }` — newest draw of each operator |
+| `/results/{date}` | `{ date, results: [draw, …] }` (empty `results` plus a `note` on a day with no draws) |
+| `/operators/{operator}` | `{ operator, operator_name, results: [draw, …] }` |
+| `/numbers/{number}` | `{ number, count, results: [{ operator, operator_name, date, draw_no, tier, url }, …] }` — `tier` is `1st`, `2nd`, `3rd`, `special` or `consolation` |
+| `/games/{game}` | `{ game, game_name, operator, results: [game result, …] }` |
+| `/schedule` | `{ schedule: [{ date, kind, operators: [{ id, name }, …] }, …] }` — `kind` is `regular` or `special` |
+
+A 4D draw (real, trimmed):
 
 ```json
 {
@@ -209,8 +220,8 @@ A 4D draw inside `data` (trimmed):
   "first": "1063",
   "second": "2421",
   "third": "5815",
-  "special": ["....", "... 10 numbers"],
-  "consolation": ["....", "... 10 numbers"],
+  "special": ["6814", "7902", "… 10 numbers"],
+  "consolation": ["1091", "8204", "… 10 numbers"],
   "status": "checked",
   "url": "https://4dlivetoday.com/en/results/2026-09-27"
 }
@@ -227,19 +238,36 @@ Numbers are always strings, so leading zeros are kept (`"0650"`, never `650`).
 | `single_source` | Only one official source exists for this operator |
 | `history` | Imported from the archive |
 
-Money amounts in game results are strings exactly as the operator published them, formatted with currency, e.g. `"RM 12,749,753.62"` or `"S$ 1,298,326"`.
+A game result (real, trimmed):
+
+```json
+{
+  "game": "sg_toto",
+  "game_name": "Singapore Toto",
+  "operator": "sg",
+  "date": "2026-09-28",
+  "draw_no": "4221",
+  "numbers": ["14", "22", "25", "27", "34", "37"],
+  "bonus": ["18"],
+  "jackpots": { "Group 1 prize": "S$ 1,298,326" },
+  "url": "https://4dlivetoday.com/en/sg-toto"
+}
+```
+
+Money amounts are strings exactly as the operator published them, with currency (`"RM 12,749,753.62"`, `"S$ 1,298,326"`). `draw_no` can be empty for operators that don't publish a readable draw number.
 
 ---
 
 ## Errors
 
 ```json
-{ "error": { "code": "invalid_date", "message": "date must be a real calendar date in YYYY-MM-DD form" } }
+{ "error": { "code": "invalid_date", "message": "date must be a real calendar date in YYYY-MM-DD format" } }
 ```
 
 | HTTP | code | When |
 |---|---|---|
 | 400 | `invalid_date`, `invalid_operator`, `invalid_number`, `invalid_game`, `invalid_limit` | Bad input |
+| 429 | — | Too many MCP requests from one address; wait for `Retry-After` |
 | 503 | `upstream_unavailable` | Results store temporarily unreachable; retry shortly |
 
 A date with no draws (for example a regular Monday for the weekly operators) is **not** an error: it returns `200` with an empty list.
@@ -250,7 +278,9 @@ In MCP, the same problems come back as a tool result with `isError: true` and th
 
 ## Fair use and caching
 
-- No key and no sign-up. Responses are cached at the edge for about 60 seconds; results change only around draw times, so please cache on your side too.
+- No key and no sign-up. Responses are cached for about 60 seconds; results change only around draw times, so please cache on your side too.
+- Unknown query parameters are dropped with a redirect to the canonical URL.
+- The MCP endpoint accepts one request per call (no JSON-RPC batches).
 - Draw nights (roughly 18:30–21:30 Malaysia time on draw days) are when results change; polling more often than once a minute gains nothing.
 - Abusive traffic may be rate-limited without notice.
 

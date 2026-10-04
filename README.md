@@ -1,5 +1,7 @@
 # 4D Results API & MCP Server — 4dlivetoday
 
+[![M8ven Score](https://m8ven.ai/badge/mcp/oddsflowai-team/4dlivetoday-mcp?variant=verified)](https://m8ven.ai/mcp/oddsflowai-team/4dlivetoday-mcp?s=readme)
+
 Official 4D lottery results for **Malaysia, Singapore and Cambodia**, as a free JSON API and a remote **MCP server** that AI assistants (Claude, ChatGPT, Cursor and others) can query directly.
 
 - **MCP server:** `https://4dlivetoday.com/mcp` (Streamable HTTP, no sign-in)
@@ -7,7 +9,7 @@ Official 4D lottery results for **Malaysia, Singapore and Cambodia**, as a free 
 - **Docs page:** https://4dlivetoday.com/en/developers
 - **Data licence:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — free to use, including commercially, with attribution
 
-Results are compiled from each operator's **own official website** and cross-checked where a second source exists. This service publishes results and draw history only. It does not sell tickets or accept bets, and it offers no number recommendations, "hot" numbers or forecasts.
+On draw nights, results are read from each operator's **own official website** and cross-checked against independent results sites where one exists. Older draws come from results archives (Magnum's official archive back to 1985, the others mainly the check4d.org archive); see [data sources](https://4dlivetoday.com/en/sources) for each operator's coverage. This service publishes results and draw history only. It does not sell tickets or accept bets, and it offers no number recommendations, "hot" numbers or forecasts.
 
 ---
 
@@ -298,7 +300,8 @@ A link back is appreciated and is how this stays free.
 
 ## Data quality
 
-- Every result comes from the operator's own official site. Where a second independent source exists, the result is cross-checked and its `status` becomes `checked`.
+- On draw nights each result is read from the operator's own official site. Where a second independent source exists, the result is cross-checked and its `status` becomes `checked`.
+- Older draws were imported from results archives. They carry `status: history`, or `checked` where a second source confirmed the same numbers (for example every Magnum draw back to 1985). How far each operator goes back, and how many older draws a second source has confirmed, is listed on the [data sources page](https://4dlivetoday.com/en/sources).
 - Always treat the operator's own announcement as final. If you find a result that differs from the operator's official site, please [open an issue](../../issues) with the date, operator and the operator's page.
 
 ---
